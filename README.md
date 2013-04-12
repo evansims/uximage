@@ -41,6 +41,6 @@ None. Boosh.
 
 ## Strategy
 
-This library follows the strategy put forth by ![Thomas Fuch's "Retinafy" book](http://retinafy.me/). Instead of loading 2X image assets specifically for retina displays, the intended use for uxImage is to load double (or even higher) resolution versions of image assets, and simply applying high levels of compresion. Images are automatically downscaled and antialiased by browsers at a fraction of the bandwidth cost.
+This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/). Instead of loading 2X image assets specifically for retina displays, the intended use for uxImage is to load double (or even higher) resolution versions of image assets, and simply applying high levels of compresion. Images are automatically downscaled and antialiased by browsers at a fraction of the bandwidth cost.
 
 In my tests, 30% JPG quality of 60% WebP quality looked equally good on normal or retina displays at double resolution. This technique usually results in 50% file size savings, often times much more, and you get improved picture quality across all devices, not just HiDPI.
