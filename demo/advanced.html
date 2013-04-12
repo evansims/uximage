@@ -1,0 +1,47 @@
+<!DOCTYPE>
+<html>
+
+<head>
+	<style>
+	html, body {
+		margin: 0; padding: 0;
+		font: 16px/1.45em helvetica, arial, sans-serif;
+	}
+
+	small {
+		font-size: 13px;
+	}
+
+	#layout {
+		min-width: 280px;
+		max-width: 960px;
+		padding: 20px;
+		margin: 0 auto;
+	}
+
+	.ux-image {
+		margin-bottom: 20px;
+	}
+	</style>
+
+	<script src="../src/uximage.js"></script>
+
+	<script>
+		var demo = new uxImage();
+		demo.speedTest(function() {
+			demo.Parse();
+		});
+	</script>
+</head>
+
+<body>
+
+	<div id="layout">
+		<div class="ux-image" data-src="images/demoSmall.jpg" data-src-medium="images/demoMedium.jpg" data-src-high="images/demoHigh.jpg" data-breakpoint="614" data-breakpoint-high="960" data-use-webp="true" width="4912" height="3264"></div>
+		<p>Photo &copy;2013 <a href="http://www.flickr.com/photos/therift/8534938985/in/set-72157632934100541" target="_blank">Evan Sims</a> used under the terms of the <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">CC BY-NC-SA 2.0 license</a>.
+
+		<p>This is an advanced example of uxImage. It will use alternate WebP versions of image assets in browsers that support it, and will swap between small, medium and large resolution assets using width breakpoints.</p>
+	</div>
+
+</body>
+</html>
