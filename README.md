@@ -15,7 +15,7 @@ Here's a barebones example:
 <div class="ux-image" data-src="test-small.jpg" width="960" height="540">Accessible text.</div>
 ```
 
-Not that different from what you're doing now, right? Now let's go wild:
+Not that different from what you're doing now, right? Now let's get wild:
 
 ```html
 <div class="ux-image ondemand"
@@ -27,7 +27,7 @@ Not that different from what you're doing now, right? Now let's go wild:
      width="960" height="540">Accessible text.</div>
 ```
 
-The above is an example of a uxImage element. It's a DIV with some HTML5 data attributes assigned that help customize the rendering behavior. You can put whatever you'd like inside it - accessibility text, noscript fallbacks, etc.
+Better call Kenny Loggins, because we just entered the danger zone. This is an advanced example of a uxImage. It's a DIV with some HTML5 data attributes assigned that help customize the rendering behavior. You can put whatever you'd like inside it - accessibility text, noscript fallbacks, overlays, whatever your heart desires.
 
 + **data-src** - The smallest version of the image, preferably compressed and suitable over ~3G cellular networks.
 + **data-src-medium** - The standard version of the image, suitable for desktop or tablets.
@@ -62,6 +62,3 @@ In my tests, 30% JPG quality of 60% WebP quality looked equally good on normal o
 ### Lazy Loading
 This library automatically unload lazy loaded images after the viewport is scrolled past a threshold. This is done to conserve memory on mobile devices and provide better page performance on sites that implemented "infinite scrolling" techniques.
 
-## Fallbacks
-
-Personally, I'd rather my images not be indexed by spiders, but if you're worried about this you could include a copy of your image wrapped in ```<noscript>``` tags inside your uxImage elements. They won't be visible to users with JavaScript enabled, but spiders will gobbled it up.
