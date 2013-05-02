@@ -1,4 +1,4 @@
-uxImage is yet another method of doing wicked awesome responsive image stuff. It's a standalone JavaScript library that handles fun things like:
+**uxImage is yet another JavaScript library for doing wicked awesome responsive image stuff.** It handles fun things like:
 
 * Responsive image scaling based on the dimensions of the parent container.
 * Dynamically swapping out larger or smaller images based on predefined breakpoints.
