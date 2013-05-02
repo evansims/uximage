@@ -1,13 +1,13 @@
-uxImage is yet another method of doing cool responsive image stuff. It's a standalone JavaScript library that handles fun stuff like:
+uxImage is yet another method of doing wicked awesome responsive image stuff. It's a standalone JavaScript library that handles fun things like:
 
-* Responsive image scaling
-* Retina/HiDPI image swapping (see the Strategy section)
-* Dynamic image swapping triggered by viewport resizing
-* Lazy image loading, with unloading support to conserve memory.
-* Automatically use WebP versions of an image when the browser supports it.
-* Bandwidth detection to limit image resolution choices on slow network connections
+* Responsive image scaling based on the dimensions of the parent container.
+* Dynamically swapping out larger or smaller images based on predefined breakpoints.
+* Swapping out images for Retina/HiDPI displays.
+* Lazily loading images when the user needs to see them, and unloading them when they don't (to conserve memory.)
+* Automatically using alternative WebP copies of images when the browser supports it (to save on bandwidth.)
+* Figuring out whether the visitor is on a slow connection (and showing smaller or heavily compressed images instead.)
 
-The library is intended to be as lightweight as possible and avoids imposing dependencies. However, as with other techniques out there, it requires you to adapt your markup.
+The library is intended to be as lightweight as possible and avoids imposing dependencies. You should be able to run it alongside any other frameworks or libraries without conflicts. However, as with other techniques out there, it requires you to adapt your markup.
 
 Here's a barebones example:
 
@@ -15,13 +15,16 @@ Here's a barebones example:
 <div class="ux-image" data-src="test-small.jpg" width="960" height="540">Accessible text.</div>
 ```
 
-And a more advanced example:
+Not that different from what you're doing now, right? Now let's go wild:
 
 ```html
-<div class="ux-image ondemand" data-src="test-small.jpg"
-     data-src-medium="test-medium.jpg" data-src-high="test-high.jpg"
-     data-breakpoint="480" data-breakpoint-high="960" width="960"
-     height="540">Accessible text.</div>
+<div class="ux-image ondemand"
+     data-src="test-small.jpg"
+     data-src-medium="test-medium.jpg"
+     data-src-high="test-high.jpg"
+     data-breakpoint="480"
+     data-breakpoint-high="960"
+     width="960" height="540">Accessible text.</div>
 ```
 
 The above is an example of a uxImage element. It's a DIV with some HTML5 data attributes assigned that help customize the rendering behavior. You can put whatever you'd like inside it - accessibility text, noscript fallbacks, etc.
