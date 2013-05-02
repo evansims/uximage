@@ -29,7 +29,7 @@ Not that different from what you're doing now, right? Now let's get wild:
 
 Better call Kenny Loggins, because we just entered the danger zone. This is an advanced example of a uxImage. It's a DIV with some HTML5 data attributes assigned that help customize the rendering behavior. You can put whatever you'd like inside it - accessibility text, noscript fallbacks, overlays, whatever your heart desires.
 
-+ **data-src** - The smallest version of the image, preferably compressed and suitable over ~3G cellular networks.
++ **data-src** - The smallest version of the image, preferably compressed and ideal for ~3G cellular networks.
 + **data-src-medium** - The standard version of the image, suitable for desktop and tablets.
 + **data-src-high** - The largest version of the image you want to deliver, intended for hidpi and high resolution devices.
 + **data-use-webp** - If this attribute is set, uxImage will replace the file extension of the images (see above) with .webp. If the browser doesn't support WebP, it does nothing.
