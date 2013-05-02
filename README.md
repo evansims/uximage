@@ -4,8 +4,8 @@ uxImage is yet another method of doing cool responsive image stuff. It's a stand
 * Retina/HiDPI image swapping (see the Strategy section)
 * Dynamic image swapping triggered by viewport resizing
 * Lazy image loading, with unloading support to conserve memory.
-* Automatically use WebP versions of image assets when the browser supports it.
-* Bandwidth detection to limit image assets on slow network connections
+* Automatically use WebP versions of an image when the browser supports it.
+* Bandwidth detection to limit image resolution choices on slow network connections
 
 The library is intended to be as lightweight as possible and avoids imposing dependencies. However, as with other techniques out there, it requires you to adapt your markup.
 
@@ -26,8 +26,8 @@ And a more advanced example:
 
 The above is an example of a uxImage element. It's a DIV with some HTML5 data attributes assigned that help customize the rendering behavior. You can put whatever you'd like inside it - accessibility text, noscript fallbacks, etc.
 
-+ **data-src** - The smallest version of the image assets, preferably compressed and suitable over ~3G cellular networks.
-+ **data-src-medium** - The standard version of the image assets, suitable for desktop or tablets.
++ **data-src** - The smallest version of the image, preferably compressed and suitable over ~3G cellular networks.
++ **data-src-medium** - The standard version of the image, suitable for desktop or tablets.
 + **data-src-high** - The largest version of the image you want to deliver, intended for hidpi or high resolution devices.
 + **data-use-webp** - If this attribute is set, uxImage will replace the file extension of the above attributes with .webp on devices that support the file format.
 + **data-breakpoint** - If the container element is resized larger than this value, swap to the medium version of this image. Below? Swap to the small/mobile version.
@@ -57,4 +57,4 @@ This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](h
 In my tests, 30% JPG quality of 60% WebP quality looked equally good on normal or retina displays at double resolution. This technique usually results in 50% file size savings, often times much more, and you get improved picture quality across all devices, not just HiDPI.
 
 ### Lazy Loading
-This library automatically unload lazy loaded image assets after the viewport is scrolled past a threshold. This is done to conserve memory on mobile devices and provide better page performance on sites that implemented "infinite scrolling" techniques.
+This library automatically unload lazy loaded images after the viewport is scrolled past a threshold. This is done to conserve memory on mobile devices and provide better page performance on sites that implemented "infinite scrolling" techniques.
