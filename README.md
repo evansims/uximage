@@ -41,7 +41,7 @@ The ```ux-image``` class defines this DIV as a uxImage element. Duh.
 
 The ```ondemand``` class tells the library to treat this as a "lazy loading" image. These images aren't loaded until the visitor scrolls near the image to reduce bandwidth usage and memory consumption. After the visitor scrolls a fair distance past them they'll be unloaded to (again) save on memory and performance. This is awesome for mobile users, but everyone can benefit from it.
 
-**Important** - You'll want to ensure your HTTP server is assigning appropriate caching headers to your images to ensure when they are loaded in and out of memory they are doing so only once from your server, and the remainder of the time from the visitor's browser cache. That's on you, cowboy.
+**Important** - You'll want to make sure your HTTP server is assigning appropriate caching headers to your assets. Lazy loading can involve a lot of images being loaded in and out of memory, so you want to be sure that visitors are only hitting your servers once for those files, and the remainder of the time they're getting them from their browser caches. That's on you, cowboy.
 
 ## Why uxImage?
 
