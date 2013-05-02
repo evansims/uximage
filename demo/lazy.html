@@ -1,0 +1,126 @@
+<!DOCTYPE>
+<html>
+
+<head>
+	<style>
+	html, body {
+		margin: 0; padding: 0;
+		font: 16px/1.45em helvetica, arial, sans-serif;
+	}
+
+	small {
+		font-size: 13px;
+	}
+
+	hr {
+		margin: 3em auto;
+		width: 50%; height: 1px;
+		border: none;
+		background: rgba(0,0,0,0.15);
+	}
+
+	p {
+		text-align: justify;
+	}
+
+	#layout {
+		min-width: 280px;
+		max-width: 640px;
+		padding: 20px;
+		margin: 0 auto;
+	}
+
+	.ux-image {
+		margin-bottom: 20px;
+	}
+
+	/* Enjoy some surperflous animation: */
+	.ux-image.ondemand {
+		opacity: 0;
+
+		-webkit-background-clip: padding-box;
+		border-radius: 3px 3px;
+
+		-webkit-perspective: 1000;
+		-moz-perspective: 1000;
+
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+		-moz-backface-visibility: hidden;
+		-ms-backface-visibility: hidden;
+
+		-webkit-transition: -webkit-transform 0.5s ease,
+		                    opacity 0.25s ease;
+		-moz-transition: -moz-transform 0.25s ease,
+		                 opacity 0.25s ease;
+		-o-transition: -o-transform 0.5s ease,
+		               opacity 0.25s ease;
+		transition: transform 0.5s ease,
+		            opacity 0.25s ease;
+
+		-webkit-transform: translate3d(0px, 100px, 0) rotateX(-30deg) scale(1.25, 1.25);
+		-moz-transform: translate3d(0px, 100px, 0) rotateX(-30deg) scale(1.25, 1.25);
+		-o-transform: translate3d(0px, 100px, 0) rotateX(-30deg) scale(1.25, 1.25);
+		transform: translate3d(0px, 100px, 0) rotateX(-30deg) scale(1.25, 1.25);
+	}
+
+	.ux-image.ondemand[data-loaded] {
+		-webkit-transform: translate3d(0px, 0px, 0px) rotateX(0) scale(1, 1);
+		-moz-transform:  translate3d(0px, 0px, 0px) rotateX(0) scale(1, 1);
+		-o-transform:  translate3d(0px, 0px, 0px) rotateX(0) scale(1, 1);
+		transform: translate3d(0px, 0px, 0px) rotateX(0) scale(1, 1);
+		opacity: 1;
+	}
+
+	</style>
+
+	<script src="../src/uximage.js"></script>
+
+	<script>
+		var demo = new uxImage();
+
+		// You'd want to set this higher in real world situations; 500+.
+		demo.lazyLoadDistance = 100;
+
+		demo.speedTest(function() {
+			demo.Parse();
+		});
+	</script>
+</head>
+
+<body>
+
+	<div id="layout">
+
+		<p><strong>This is a demo of uxImage's lazy loading functionality.</strong> 3 image assets are
+		   repeated 4 times. As you scroll down the page, these assets are loaded as needed. Once you've
+		   scrolled far enough beyond the images, they are unloaded to conserve memory and preserve page
+		   performance.</p>
+
+		<p>This technique is especially useful for mobile users where memory is more limited, and on
+		   websites that apply infinite scrolling methods where an unknown number of image assets might
+		   be in play.</p>
+
+		<hr />
+
+		<div class="ux-image ondemand" data-src="images/demoLazy1.jpg" width="2048" height="1361"></div>
+		<div class="ux-image ondemand" data-src="images/demoLazy2.jpg" width="2048" height="1361"></div>
+		<div class="ux-image ondemand" data-src="images/demoLazy3.jpg" width="2048" height="1361"></div>
+
+		<div class="ux-image ondemand" data-src="images/demoLazy1.jpg" width="2048" height="1361"></div>
+		<div class="ux-image ondemand" data-src="images/demoLazy2.jpg" width="2048" height="1361"></div>
+		<div class="ux-image ondemand" data-src="images/demoLazy3.jpg" width="2048" height="1361"></div>
+
+		<div class="ux-image ondemand" data-src="images/demoLazy1.jpg" width="2048" height="1361"></div>
+		<div class="ux-image ondemand" data-src="images/demoLazy2.jpg" width="2048" height="1361"></div>
+		<div class="ux-image ondemand" data-src="images/demoLazy3.jpg" width="2048" height="1361"></div>
+
+		<div class="ux-image ondemand" data-src="images/demoLazy1.jpg" width="2048" height="1361"></div>
+		<div class="ux-image ondemand" data-src="images/demoLazy2.jpg" width="2048" height="1361"></div>
+		<div class="ux-image ondemand" data-src="images/demoLazy3.jpg" width="2048" height="1361"></div>
+
+		<p><small>Photos &copy;2013 <a href="http://www.flickr.com/photos/therift/" target="_blank">Evan Sims</a> used under the terms of the <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">CC BY-NC-SA 2.0 license</a>.</small></p>
+	</div>
+
+</body>
+</html>
