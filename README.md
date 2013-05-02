@@ -45,7 +45,7 @@ The ```ondemand``` class tells the library to treat this as a "lazy loading" ima
 
 ## Why uxImage?
 
-I think it's pretty swell and has a few tricks that other libraries don't.
+I think it's pretty swell and does a few really useful tricks that other libraries don't.
 
 ## Requirements
 
