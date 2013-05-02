@@ -9,6 +9,14 @@ uxImage is yet another method of doing cool responsive image stuff. It's a stand
 
 The library is intended to be as lightweight as possible and avoids imposing dependencies. However, as with other techniques out there, it requires you to adapt your markup.
 
+Here's a barebones example:
+
+```html
+<div class="ux-image" data-src="test-small.jpg" width="960" height="540">Accessible text.</div>
+```
+
+And a more advanced example:
+
 ```html
 <div class="ux-image ondemand" data-src="test-small.jpg"
      data-src-medium="test-medium.jpg" data-src-high="test-high.jpg"
