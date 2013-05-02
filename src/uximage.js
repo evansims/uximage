@@ -1,6 +1,6 @@
 
 /*!
- * uxImage 2013.04.08
+ * uxImage 2013.05.01
  * http://github.com/evanisms/uximage/
 
  * Copyright 2013 Evan Sims and other contributors
@@ -31,42 +31,55 @@ function uxImage() {
 	this.deviceBandwidth = null;
 	this.clientWebPSupport = null;
 
+	// How far above or below the image element should the viewport be scrolled before
+	// the asset is unloaded. Defaults to 500px.
+	this.lazyLoadDistance = 500;
+
 	this.cachedBreakpointObjects = [];
 	this.cachedLazyObjects = [];
 	this.throttleProcessor = {};
+
+	this.eventOccured = { viewportScrolled: false, viewportResized: false };
 
 	this.speedTest = function(callback) {
 		if(!callback) callback = function() {}
 
 		var me = this;
 		this.checkWebP(function() {
-			var testImage = new Image(); //document.createElement('img');
-			var testStart = null;
 
-			testImage.onload = function() {
-				var duration = ( (new Date()).getTime() - testStart ) / 1000;
-				duration = ( duration > 1 ? duration : 1 );
+			try {
+				var testImage = new Image(),
+				testStart = null;
 
-				var connectionKbps = ( ( 50 * 1024 * 8 ) / duration ) / 1024;
-				var bandwidth = ( connectionKbps >= 150 ? 'high' : 'low' );
+				testImage.onload = function() {
+					var duration = ( (new Date()).getTime() - testStart ) / 1000;
+					duration = ( duration > 1 ? duration : 1 );
 
-				me.speedTestComplete(bandwidth, callback);
-			};
+					var connectionKbps = ( ( 50 * 1024 * 8 ) / duration ) / 1024;
+					var bandwidth = ( connectionKbps >= 150 ? 'high' : 'low' );
 
-			testImage.onerror = function() {
+					me.speedTestComplete(bandwidth, callback);
+				};
+
+				testImage.onerror = function() {
+					me.speedTestComplete('low', callback);
+				};
+
+				testImage.onabort = function() {
+					me.speedTestComplete('low', callback);
+				};
+
+				testStart = (new Date()).getTime();
+				testImage.src = me.speedTestUri + "?r=" + Math.random();
+
+				setTimeout(function () {
+					me.speedTestComplete('low', callback);
+				}, ((((50 * 8) / 150) * 1000) + 350));
+
+			} catch(e) {
 				me.speedTestComplete('low', callback);
-			};
+			}
 
-			testImage.onabort = function() {
-				me.speedTestComplete('low', callback);
-			};
-
-			testStart = (new Date()).getTime();
-			testImage.src = me.speedTestUri + "?r=" + Math.random();
-
-			setTimeout(function () {
-				me.speedTestComplete('low', callback);
-			}, ((((50 * 8) / 150) * 1000) + 350));
 		});
 	}
 
@@ -81,23 +94,23 @@ function uxImage() {
 		if(!callback) callback = function() {};
 
 		if(this.clientWebPSupport != null) {
-			callback();
+			callback(this.clientWebPSupport);
 			return;
 		}
 
-		var webP = new Image();
-		var me = this;
+		var webP = new Image(),
+		    me   = this;
 
-    	webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
-    	webP.onload = webP.onerror = function () {
-    		if(webP.height === 2 && webP.width === 2) {
-    			me.clientWebPSupport = true;
-    		} else {
-    			me.clientWebPSupport = false;
-    		}
+		webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+		webP.onload = webP.onerror = function () {
+			if(webP.height === 2 && webP.width === 2) {
+				me.clientWebPSupport = true;
+			} else {
+				me.clientWebPSupport = false;
+			}
 
-    		callback();
-    	};
+			callback(me.clientWebPSupport);
+		};
 	}
 
 	this.Parse = function(container) {
@@ -106,12 +119,12 @@ function uxImage() {
 			container = document.getElementsByTagName("body");
 
 		if(container.length) {
-			for(var i = 0; i < container.length; i += 1) {
+			for(var i = 0, len = container.length; i < len; i += 1) {
 				this.Parse(container[i]);
 			}
 		} else {
 			images = container.getElementsByClassName("ux-image");
-			for(var i = 0; i < images.length; i += 1) {
+			for(var i = 0, len = images.length; i < len; i += 1) {
 				this.Analyze(images[i]);
 			}
 		}
@@ -122,21 +135,21 @@ function uxImage() {
 	}
 
 	this.Analyze = function(element) {
-		var classes = [];
-		var ondemand = false;
+		var classes  = [],
+		    ondemand = false;
 
-		if(typeof element.classList != "undefined") {
+		if(typeof element.classList === undefined) {
 			classes = element.classList;
 		} else {
 			classes = element.className.split(' ');
 		}
 
-		if(typeof classes.indexOf != "undefined") {
+		if(typeof classes.indexOf === undefined) {
 			if(classes.indexOf('ondemand') != -1) {
 				ondemand = true;
 			}
 		} else {
-			for(var i = 0; i < classes.length; i++) {
+			for(var i = 0, len = classes.length; i < len; i++) {
 				if(classes[i] === 'ondemand') {
 					ondemand = true;
 					break;
@@ -144,75 +157,108 @@ function uxImage() {
 			}
 		}
 
-		if(ondemand) {
-			element.setAttribute('data-ondemand-state', 'fresh');
+		if(ondemand) { // Flag this object
+			element.setAttribute('data-ondemand-state', 'pre');
 			this.cachedLazyObjects.push(element);
 		} else {
-			this.Transform(element);
+			element.setAttribute('data-loaded', 'true');
 		}
+
+		this.Transform(element);
 	}
 
 	this.scrollProcessor = function() {
 		if(!this.cachedLazyObjects.length) return;
 		if(!this.deviceBandwidth) return;
 
-		 var me = this;
-		var doc = document.documentElement, body = document.body;
-		var top = (doc && doc.scrollTop || body && body.scrollTop || 0);
-		  var y = (window.innerHeight || e.clientHeight || g.clientHeight || 0);
+		var me = this;
 
-		for(var i = 0; i < this.cachedLazyObjects.length; i += 1) {
-			if((top + y) >= (this.cachedLazyObjects[i].offsetTop - 10)) {
-				this.Transform(this.cachedLazyObjects[i], function() {
-					me.cachedLazyObjects.splice(i, 1);
-				});
+		if(me.throttleProcessor.scroll) clearTimeout(me.throttleProcessor.scroll);
+
+		me.throttleProcessor.scroll = setTimeout(function () {
+			var doc = document.documentElement,
+			   body = document.body,
+			    top = (doc && doc.scrollTop || body && body.scrollTop || 0),
+			      y = (window.innerHeight || e.clientHeight || g.clientHeight || 0);
+
+			for(var i = 0, len = me.cachedLazyObjects.length; i < len; i += 1) {
+				var image = me.cachedLazyObjects[i];
+
+				if(image.getAttribute('data-ondemand-state') !== "ready")
+					continue;
+
+				if(((top + y) >= image.offsetTop - me.lazyLoadDistance) &&
+				   ((top) <= (image.offsetTop + image.offsetHeight + me.lazyLoadDistance))) {
+				   	if( ! image.getAttribute('data-loaded')) {
+				   		image.setAttribute('data-scrolled-past', 'true');
+				   		image.setAttribute('data-loaded', 'true');
+						me.Transform(image);
+					}
+				} else {
+					if(image.getAttribute('data-loaded')) {
+						image.style.backgroundImage = '';
+						image.removeAttribute('data-loaded');
+					}
+				}
+			}
+		}, 20);
+	}
+
+	this.breakpointApply = function(image) {
+		if( ! image.getAttribute('data-loaded'))
+			return;
+
+		if(image.getAttribute('data-breakpoint-high') || image.getAttribute('data-breakpoint')) {
+			if(image.offsetWidth >= parseInt(image.getAttribute('data-breakpoint-high'))) {
+				me.setSource(image, image.getAttribute('data-src-high'));
+
+			} else if(image.offsetWidth >= parseInt(image.getAttribute('data-breakpoint'))) {
+				me.setSource(image, image.getAttribute('data-src-medium'));
+
+			} else if(image.offsetWidth < parseInt(image.getAttribute('data-breakpoint'))) {
+				me.setSource(image, image.getAttribute('data-src'));
+
 			}
 		}
-
-		this.breakpointProcessor();
 	}
 
 	this.breakpointProcessor = function() {
-		if(this.throttleProcessor) clearTimeout(this.throttleProcessor);
+		if(this.throttleProcessor.resize) clearTimeout(this.throttleProcessor.resize);
 		if(!this.deviceBandwidth) { this.breakpointProcessor(); }
 
 		var me = this;
-		this.throttleProcessor = setTimeout(function () {
-			for(var i = 0; i < me.cachedBreakpointObjects.length; i += 1) {
-				if(me.cachedBreakpointObjects[i].getAttribute('data-breakpoint-high') || me.cachedBreakpointObjects[i].getAttribute('data-breakpoint')) {
-					if(me.cachedBreakpointObjects[i].offsetWidth >= parseInt(me.cachedBreakpointObjects[i].getAttribute('data-breakpoint-high'))) {
-						if(!me.compareSource(me.cachedBreakpointObjects[i], me.cachedBreakpointObjects[i].getAttribute('data-src-high')))
-							me.setSource(me.cachedBreakpointObjects[i], me.cachedBreakpointObjects[i].getAttribute('data-src-high'));
-
-					} else if(me.cachedBreakpointObjects[i].offsetWidth >= parseInt(me.cachedBreakpointObjects[i].getAttribute('data-breakpoint'))) {
-						if(!me.compareSource(me.cachedBreakpointObjects[i], me.cachedBreakpointObjects[i].getAttribute('data-src-medium')))
-							me.setSource(me.cachedBreakpointObjects[i], me.cachedBreakpointObjects[i].getAttribute('data-src-medium'));
-
-					} else if(me.cachedBreakpointObjects[i].offsetWidth < parseInt(me.cachedBreakpointObjects[i].getAttribute('data-breakpoint'))) {
-						if(!me.compareSource(me.cachedBreakpointObjects[i], me.cachedBreakpointObjects[i].getAttribute('data-src')))
-							me.setSource(me.cachedBreakpointObjects[i], me.cachedBreakpointObjects[i].getAttribute('data-src'));
-
-					}
-				}
+		this.throttleProcessor.resize = setTimeout(function () {
+			for(var i = 0, len = me.cachedBreakpointObjects.length; i < len; i += 1) {
+				me.breakpointApply(me.cachedBreakpointObjects[i]);
 			}
 		}, 150);
 	}
 
-	this.compareSource = function(element, src) {
-		if(element.getAttribute("data-use-webp") && this.clientWebPSupport)
-			src = src.substring(0, src.lastIndexOf('.') + 1) + 'webp';
+	this.acceptSourceChange = function(element, src) {
+		var curr = element.style.backgroundImage;
 
-		if(element.style.backgroundImage.substring(element.style.backgroundImage.lastIndexOf('/') + 1) == src + ")")
+		if(!curr.length && src.length)
 			return true;
-		else
-			return false;
+
+		if(new RegExp("/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)? (\/|\/([\w#!:.?+=&%@!\-\/]))?/").test(src)) {
+			if(curr == "url(" + src + ")")
+				return false;
+			else
+				return true;
+		} else {
+			if(curr.substring(curr.length - src.length - 1) == src + ")")
+				return false;
+			else
+				return true;
+		}
 	}
 
 	this.setSource = function(element, src) {
-		if(element.getAttribute("data-use-webp") && this.clientWebPSupport)
+		if(this.clientWebPSupport && element.getAttribute("data-use-webp") && src.substring(src.lastIndexOf('.') + 1) !== 'webp')
 			src = src.substring(0, src.lastIndexOf('.') + 1) + 'webp';
 
-		element.style.backgroundImage = "url(" + src + ")";
+		if(this.acceptSourceChange(element, src))
+			element.style.backgroundImage = "url(" + src + ")";
 	}
 
 	this.Transform = function(element, callback) {
@@ -259,20 +305,28 @@ function uxImage() {
 			var ratio = (dimensions.height / dimensions.width) * 100;
 			element.style.paddingBottom = ratio + "%";
 
-			if(this.deviceBandwidth == "low" && sources.low) {
-				this.setSource(element, sources.low);
+			if(element.getAttribute('data-ondemand-state') == 'pre') {
+				element.setAttribute('data-ondemand-state', 'ready');
 
 			} else {
-				if(element.getAttribute('data-breakpoint-high') || element.getAttribute('data-breakpoint')) {
-					this.cachedBreakpointObjects.push(element);
-				}else {
-					if(sources.medium) {
-						this.setSource(element, sources.medium);
-					} else if(sources.low) {
-						this.setSource(element, sources.low);
-					}
-				}
+				if(this.deviceBandwidth == "low" && sources.low) {
+					this.setSource(element, sources.low);
 
+				} else {
+					if(element.getAttribute('data-breakpoint-high') || element.getAttribute('data-breakpoint')) {
+						this.cachedBreakpointObjects.push(element);
+						this.breakpointApply(element);
+					}else {
+						if(this.deviceBandwidth == "high" && sources.high) {
+							this.setSource(element, sources.high);
+						} else if(sources.medium) {
+							this.setSource(element, sources.medium);
+						} else if(sources.low) {
+							this.setSource(element, sources.low);
+						}
+					}
+
+				}
 			}
 
 			callback();
@@ -281,49 +335,90 @@ function uxImage() {
 
 	}
 
+	this.getPixelDensity = function() {
+		if(typeof window.devicePixelRatio !== undefined) // WebKit
+			this.deviceRetina = (window.devicePixelRatio > 1);
+		else if(typeof window.matchMedia !== undefined) // Gecko
+			this.deviceRetina = !(window.matchMedia("(-moz-device-pixel-ratio:1.0)").matches);
+	}
+
 	this.Setup = function() {
+
 		if(this.ready)
 			return
 		else
 			this.ready = true;
 
-		this.deviceRetina = (('devicePixelRatio' in window && devicePixelRatio > 1) || ('matchMedia' in window && !matchMedia("(-moz-device-pixel-ratio:1.0)").matches));
+		this.getPixelDensity();
 
-		var head = document.getElementsByTagName("head")[0];
-		var css = document.createElement('style');
-		    css.innerHTML = '.ux-image {' +
-		                    'max-width: 100%;' +
-		                    'height: auto !important;' +
-		                    'position: relative;' +
-		                    'text-indent: -9999px;' +
-		                    'background: transparent url(data:image/gif;base64,R0lGODlhAQABAIAAAMz/AAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==) no-repeat center;' +
-		                    '-moz-background-size: cover;' +
-		                    '-webkit-background-size: cover;' +
-		                    'background-size: cover;' +
-                            'image-rendering: optimizeQuality;' +
-		                    'color: #fff;' +
-		                    '}';
+		var head = document.getElementsByTagName("head")[0],
+		    css  = document.createElement('style'),
+		    me   = this;
+
+		css.innerHTML = '.ux-image {' +
+						'max-width: 100%;' +
+						'height: auto !important;' +
+						'position: relative;' +
+						'text-indent: -9999px;' +
+						'background: transparent url(data:image/gif;base64,R0lGODlhAQABAIAAAMz/AAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==) no-repeat center;' +
+						'-moz-background-size: cover;' +
+						'-webkit-background-size: cover;' +
+						'background-size: cover;' +
+						'image-rendering: optimizeQuality;' +
+						'}';
+
 		head.appendChild(css);
 
-		var me = this;
+		// Update pixel density every so often to detect when moving viewport between retina and non-retina displays.
+		setInterval(function() {
+			me.getPixelDensity();
+		}, 5000);
+
+		setInterval(function() {
+			if(me.viewportScrolled) {
+				me.viewportScrolled = false;
+				me.scrollProcessor();
+			}
+
+			if(me.viewportResized) {
+				me.viewportResized = false;
+				me.breakpointProcessor();
+				me.scrollProcessor();
+			}
+
+		}, 50);
+
+		// Detect when lazy loaded images enter or leave our viewport range.
 		document.addEventListener('scroll', function() {
-			me.scrollProcessor();
+			me.viewportScrolled = true;
 		}, false);
+
+		// Detect when new breakpoints are hit.
 		window.addEventListener('resize', function() {
-			me.breakpointProcessor();
-			me.scrollProcessor();
+			me.viewportResized = true;
 		}, false);
 	}
 
-	var me = this;
-
-	if(document.readyState === "complete") {
-		me.Setup();
+	if(window !== void 0 && window.uxImageGlobal !== void 0) {
+		return window.uxImageGlobal;
 	} else {
-		window.addEventListener("onload", function () { me.Setup(); }, false);
-		document.addEventListener("DOMContentLoaded", function () { me.Setup(); }, false);
+		if(document.readyState === "complete") {
+			this.Setup();
+		} else if(window !== void 0) {
+			var me = this;
+			window.addEventListener("onload", function () { me.Setup(); }, false);
+			document.addEventListener("DOMContentLoaded", function () { me.Setup(); }, false);
+		}
+
+		window.uxImageGlobal = this;
+		return window.uxImageGlobal;
 	}
 
-	return this;
+}
 
+/* ADM/RequireJS wrapper. */
+if(typeof define == 'function') {
+	define('uxImage', function() {
+		return new uxImage();
+	});
 }
