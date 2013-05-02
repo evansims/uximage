@@ -69,6 +69,3 @@ The trick is heavily compressing your images. Because your browser is automatica
 
 I recommend exporting your JPGs at 30% quality and WebPs at 60%. All of the demos provided use this approach so you can try it for yourself.
 
-### Lazy Loading
-This library automatically unloads lazy loaded images after the viewport is scrolled beyond a threshold. This is done to conserve memory on mobile devices and provide better page performance on sites that implement "infinite scrolling" techniques.
-
