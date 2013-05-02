@@ -43,6 +43,10 @@ The ```ondemand``` class tells the library to treat this as a "lazy loading" ima
 
 **Important** - You'll want to ensure your HTTP server is assigning appropriate caching headers to your images to ensure when they are loaded in and out of memory they are doing so only once from your server, and the remainder of the time from the visitor's browser cache.
 
+## Why uxImage?
+
+I think it's pretty swell and has a few tricks that other libraries don't.
+
 ## Requirements
 
 None. Boosh.
@@ -50,18 +54,20 @@ None. Boosh.
 ## Using It
 
 1. Include the JS file. Derp.
-2. Insert a uxImage element into your HTML. See above.
-3. Create a new instance of uxImage. ```var demo = new uxImage();```
-4. I suggest initiating a speedTest() as a first step. ```demo.speedTest();``` It's optional, but it's a good idea.
+2. Add a uxImage element to your HTML. See above examples or the demos.
+3. Create a new instance of the uxImage library. ```var demo = new uxImage();```
+4. Run a quick speed test. ```demo.speedTest();``` (It's optional, but it's a good idea.)
 5. Finally, parse your DOM. ```demo.Parse();```
 6. Profit?
 
 ## Strategy
 
 ### Retina Support
-This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/). Instead of loading 2X images specifically for retina displays, the intended use for uxImage is to load double resolution versions of all your images for all displays and simply applying high levels of compression to those images. Images are automatically downscaled and antialiased by browsers at a fraction of the bandwidth cost.
+This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/). Basically, you should treat all displays as if they are HiDPI displays by default by serving up images at a resolution double the maximum intended viewing width and height.
 
-In my tests, 30% JPG quality of 60% WebP quality looked equally good on normal or retina displays at double resolution. This technique usually results in 50% file size savings (often times much more) and you'll see improved picture quality across all devices.
+The trick is heavily compressing your images. Because your browser is automatically resampling these images as they're downscaled, compression artifacts are lost in the antialiasing. They images look just as good as uncompressed copies, and you'll shave 50% or more off the file sizes.
+
+I recommend exporting your JPGs at 30% quality and WebPs at 60%.
 
 ### Lazy Loading
 This library automatically unload lazy loaded images after the viewport is scrolled past a threshold. This is done to conserve memory on mobile devices and provide better page performance on sites that implemented "infinite scrolling" techniques.
