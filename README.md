@@ -67,8 +67,8 @@ This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](h
 
 The trick is heavily compressing your images. Because your browser is automatically resampling these images as they're downscaled, compression artifacts are lost in the antialiasing. They images look just as good as uncompressed copies, and you'll shave 50% or more off the file sizes.
 
-I recommend exporting your JPGs at 30% quality and WebPs at 60%.
+I recommend exporting your JPGs at 30% quality and WebPs at 60%. All of the demos provided use this approach so you can try it for yourself.
 
 ### Lazy Loading
-This library automatically unload lazy loaded images after the viewport is scrolled past a threshold. This is done to conserve memory on mobile devices and provide better page performance on sites that implemented "infinite scrolling" techniques.
+This library automatically unloads lazy loaded images after the viewport is scrolled beyond a threshold. This is done to conserve memory on mobile devices and provide better page performance on sites that implement "infinite scrolling" techniques.
 
