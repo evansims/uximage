@@ -69,3 +69,5 @@ The trick is heavily compressing your images. Because your browser is automatica
 
 I recommend exporting your JPGs at 30% quality and WebPs at 60%. All of the demos provided use this approach so you can try it for yourself.
 
+Keep in mind the Mobile WebKit has some [unique issues](http://duncandavidson.com/blog/2012/03/webkit_retina_bug/) with image sizes.
+
