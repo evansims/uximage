@@ -30,14 +30,18 @@ Not that different from what you're doing now, right? Now let's get wild:
 Better call Kenny Loggins, because we just entered the danger zone. This is an advanced example of a uxImage. It's a DIV with some HTML5 data attributes assigned that help customize the rendering behavior. You can put whatever you'd like inside it - accessibility text, noscript fallbacks, overlays, whatever your heart desires.
 
 + **data-src** - The smallest version of the image, preferably compressed and suitable over ~3G cellular networks.
-+ **data-src-medium** - The standard version of the image, suitable for desktop or tablets.
-+ **data-src-high** - The largest version of the image you want to deliver, intended for hidpi or high resolution devices.
-+ **data-use-webp** - If this attribute is set, uxImage will replace the file extension of the above attributes with .webp on devices that support the file format.
-+ **data-breakpoint** - If the container element is resized larger than this value, swap to the medium version of this image. Below? Swap to the small/mobile version.
-+ **data-breakpoint-high** - Beyond this value and swap to the high resolution version of the image.
-+ **width** / **height** - Optional, but highly recommended. Used in responsive scaling calculations. If not provided, uxImage will first load the smallest version of the image available into memory to determine these values. This means a potentially unnecessary, extra network call you should avoid if at all possible.
++ **data-src-medium** - The standard version of the image, suitable for desktop and tablets.
++ **data-src-high** - The largest version of the image you want to deliver, intended for hidpi and high resolution devices.
++ **data-use-webp** - If this attribute is set, uxImage will replace the file extension of the images (see above) with .webp. If the browser doesn't support WebP, it does nothing.
++ **data-breakpoint** - If the parent container is larger than this value, swap to the medium version of this image. Below it and swap to the small version.
++ **data-breakpoint-high** - Like above, except for swapping between the medium and high resolution version of the image.
++ **width** / **height** - Optional, but highly recommended. Used in responsive scaling calculations. If not provided, uxImage will first load the smallest version of the image available into memory to determine these values. This means a potentially unnecessary network call and rendering delay you should try to avoid.
 
-The ```ux-image``` class defines this DIV as a uxImage element. The ```ondemand``` class informs uxImage to treat this as a "lazy" image; i.e. don't load it until the user can view the image within their browser's window bounds.
+The ```ux-image``` class defines this DIV as a uxImage element. Duh.
+
+The ```ondemand``` class tells the library to treat this as a "lazy loading" image. These images aren't loaded until the visitor scrolls near the image, to reduce bandwidth and memory consumption. After the visitor scrolls a fair distance past them they'll be unloaded to, again, save on memory.
+
+**Important** - You'll want to ensure your HTTP server is assigning appropriate caching headers to your images to ensure when they are loaded in and out of memory they are doing so only once from your server, and the remainder of the time from the visitor's browser cache.
 
 ## Requirements
 
