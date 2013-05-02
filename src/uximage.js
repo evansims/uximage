@@ -116,7 +116,7 @@ function uxImage() {
 	this.Parse = function(container) {
 
 		if(!container)
-			container = document.getElementsByTagName("body");
+			container = document.body;
 
 		if(container.length) {
 			for(var i = 0, len = container.length; i < len; i += 1) {
@@ -282,7 +282,7 @@ function uxImage() {
 		if(!dimensions.width || !dimensions.height) {
 
 			var testImage = document.createElement('img');
-			document.getElementsByTagName("body")[0].appendChild(testImage);
+			document.body.appendChild(testImage);
 			testImage.style.display = "block";
 			testImage.style.visibility = "hidden";
 
