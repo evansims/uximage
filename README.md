@@ -55,9 +55,13 @@ None. Boosh.
 ## Strategy
 
 ### Retina Support
-This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/). Instead of loading 2X image assets specifically for retina displays, the intended use for uxImage is to load double (or even higher) resolution versions of image assets, and simply applying high levels of compression. Images are automatically downscaled and antialiased by browsers at a fraction of the bandwidth cost.
+This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/). Instead of loading 2X images specifically for retina displays, the intended use for uxImage is to load double resolution versions of all your images for all displays and simply applying high levels of compression to those images. Images are automatically downscaled and antialiased by browsers at a fraction of the bandwidth cost.
 
-In my tests, 30% JPG quality of 60% WebP quality looked equally good on normal or retina displays at double resolution. This technique usually results in 50% file size savings, often times much more, and you get improved picture quality across all devices, not just HiDPI.
+In my tests, 30% JPG quality of 60% WebP quality looked equally good on normal or retina displays at double resolution. This technique usually results in 50% file size savings (often times much more) and you'll see improved picture quality across all devices.
 
 ### Lazy Loading
 This library automatically unload lazy loaded images after the viewport is scrolled past a threshold. This is done to conserve memory on mobile devices and provide better page performance on sites that implemented "infinite scrolling" techniques.
+
+## Fallbacks
+
+Personally, I'd rather my images not be indexed by spiders, but if you're worried about this you could include a copy of your image wrapped in ```<noscript>``` tags inside your uxImage elements. They won't be visible to users with JavaScript enabled, but spiders will gobbled it up.
