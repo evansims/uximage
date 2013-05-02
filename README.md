@@ -65,7 +65,7 @@ None. Boosh.
 ### Retina Support
 This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/). Basically, you should treat all displays as if they are HiDPI by default and serve up images at double the resolution you intend them to be viewed at on the page (just as you would with "@2X" CSS hacks.)
 
-The trick is heavily compressing your images. Because your browser is automatically resampling these images as they're downscaled, compression artifacts are lost in the antialiasing. They images look just as good as uncompressed copies, and you'll shave 50% or more off the file sizes.
+The trick is heavily compressing your images. Because your browser is automatically resampling these images as they're downscaled, compression artifacts disappear in the antialiasing. They images look just as good as uncompressed copies, but you'll shave 50% or more off the file sizes. That's a lot of bandwidth savings.
 
 I recommend exporting your JPGs at 30% quality and WebPs at 60%. All of the demos provided use this approach so you can try it for yourself.
 
