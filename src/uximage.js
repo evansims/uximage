@@ -1,6 +1,6 @@
 
 /*!
- * uxImage 2013.05.01
+ * uxImage 2013.05.18
  * http://github.com/evanisms/uximage/
 
  * Copyright 2013 Evan Sims and other contributors
@@ -129,9 +129,6 @@ function uxImage() {
 			}
 		}
 
-		this.scrollProcessor();
-		this.breakpointProcessor();
-
 	}
 
 	this.Analyze = function(element) {
@@ -167,6 +164,23 @@ function uxImage() {
 		this.Transform(element);
 	}
 
+	this.getElementOffsets = function(obj) {
+		var posX = obj.offsetLeft;
+		var posY = obj.offsetTop;
+
+		while(obj.offsetParent) {
+			if(obj == document.getElementsByTagName('body')[0]) {
+				break;
+			} else {
+				posX = posX+obj.offsetParent.offsetLeft;
+				posY = posY+obj.offsetParent.offsetTop;
+				obj  = obj.offsetParent;
+			}
+		}
+
+		return {'x': posX, 'y': posY};
+	}
+
 	this.scrollProcessor = function() {
 		if(!this.cachedLazyObjects.length) return;
 		if(!this.deviceBandwidth) return;
@@ -187,10 +201,11 @@ function uxImage() {
 				if(image.getAttribute('data-ondemand-state') !== "ready")
 					continue;
 
-				if(((top + y) >= image.offsetTop - me.lazyLoadDistance) &&
-				   ((top) <= (image.offsetTop + image.offsetHeight + me.lazyLoadDistance))) {
+				imagePosition = me.getElementOffsets(image);
+
+				if(((top + y) >= imagePosition.y - me.lazyLoadDistance) &&
+				   ((top) <= (imagePosition.y + image.offsetHeight + me.lazyLoadDistance))) {
 				   	if( ! image.getAttribute('data-loaded')) {
-				   		image.setAttribute('data-scrolled-past', 'true');
 				   		image.setAttribute('data-loaded', 'true');
 						me.Transform(image);
 					}
@@ -207,6 +222,8 @@ function uxImage() {
 	this.breakpointApply = function(image) {
 		if( ! image.getAttribute('data-loaded'))
 			return;
+
+		var me = this;
 
 		if(image.getAttribute('data-breakpoint-high') || image.getAttribute('data-breakpoint')) {
 			if(image.offsetWidth >= parseInt(image.getAttribute('data-breakpoint-high'))) {
@@ -329,6 +346,9 @@ function uxImage() {
 				}
 			}
 
+			this.viewportScrolled = true;
+			this.viewportResized = true;
+
 			callback();
 
 		}
@@ -402,7 +422,7 @@ function uxImage() {
 	if(window !== void 0 && window.uxImageGlobal !== void 0) {
 		return window.uxImageGlobal;
 	} else {
-		if(document.readyState === "complete") {
+		if(document.readyState === "complete" || document.readyState === "interactive") {
 			this.Setup();
 		} else if(window !== void 0) {
 			var me = this;
