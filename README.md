@@ -1,11 +1,10 @@
 **uxImage is yet another JavaScript library for doing wicked awesome responsive image stuff.** It handles fun things like:
 
 * Responsive image scaling based on the dimensions of the parent container.
-* Dynamically swapping out larger or smaller images based on predefined breakpoints.
-* Swapping out images for Retina/HiDPI displays.
+* Automatic swapping of larger or smaller images based on predefined breakpoints.
 * Lazily loading images when the user needs to see them, and unloading them when they don't (to conserve memory.)
 * Automatically using alternative WebP copies of images when the browser supports it (to save on bandwidth.)
-* Figuring out whether the visitor is on a slow connection (and showing smaller or heavily compressed images instead.)
+* Figuring out whether the visitor is on a slow connection (and optionally showing smaller or more heavily compressed images.)
 
 The library is intended to be as lightweight as possible and avoids imposing dependencies. You should be able to run it alongside any other frameworks or libraries without conflicts. However, as with other techniques out there, it requires you to adapt your markup.
 
@@ -39,13 +38,15 @@ Better call Kenny Loggins, because we just entered the danger zone. This is an a
 
 The ```ux-image``` class defines this DIV as a uxImage element. Duh.
 
-The ```ondemand``` class tells the library to treat this as a "lazy loading" image. These images aren't loaded until the visitor scrolls near the image to reduce bandwidth usage and memory consumption. After the visitor scrolls a fair distance past the image, it is unloaded to (again) save on memory and performance. This is awesome for mobile devices, but all users can benefit from the technique.
+The ```ondemand``` class tells the library to treat this as a "lazy loading" image. These images aren't loaded until the browser scrolls near the image to reduce bandwidth usage and memory consumption. After the browser scrolls a fair distance past the image, it is unloaded to (again) save on memory and page rendering performance. This is awesome for mobile devices, but all users can benefit from the technique.
 
 **Important** - You'll want to make sure your HTTP server is assigning appropriate caching headers to your assets. Lazy loading can involve a lot of images being loaded in and out of memory, so you want to be sure that visitors are only hitting your servers once for those files. That's on you, cowboy.
 
-## Why uxImage?
+## What makes it different?
 
-I think it's pretty swell and does a few really useful tricks that other libraries don't.
+Most responsive libraries out there would be better described as smart libraries, as they only consider __screen resolution__ during page load for their breakpoints. "Mobile resolution? Use image A. Desktop? Use image B." That's fine, but it isn't really what I consider responsive: just intelligent.
+
+uxImage is truly responsive in that it's breakpoint system is based upon the width of the element's parent container. Just as a responsively designed website lets you effortlessly resize from mobile to large desktop display resolutions and transform the layout to accomodate, uxImage will swap images appropriately as your responsive layout transforms.
 
 ## Requirements
 
@@ -53,21 +54,25 @@ None. Boosh.
 
 ## Using It
 
-1. Include the JS file. Derp.
-2. Add a uxImage element to your HTML. See above examples or the demos.
+1. Include the uxImage script in your page.
+2. Add a uxImage element to your HTML.
 3. Create a new instance of the uxImage library. ```var demo = new uxImage();```
 4. Run a quick speed test. ```demo.speedTest();``` (It's optional, but it's a good idea.)
 5. Finally, parse your DOM. ```demo.Parse();```
 6. Profit?
 
-## Strategy
+## Questions and Best Practices
 
-### Retina Support
-This library follows the strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/). Basically, you should treat all displays as if they are HiDPI by default and serve up images at double the resolution you intend them to be viewed at on the page (just as you would with "@2X" CSS hacks.)
+### Where's the Retina/HiDPI support?
+@1x is dead. 92.8% of all mobile screens are @1.5x or higher. This library follows a strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/) Simply: You should treat all displays as if they are HiDPI, because most will be. Serve up images at roughly twice the resolution you intend them to be viewed at, but apply high levels of compression to those images. Browsers automatically resample and antialias images as they're downscaled, so compression artifacts disappear in the process. **The images will look just as good as uncompressed copies** but **you'll be shaving 50% or more off your downloaded file sizes**. That's a lot of bandwidth savings, and a huge win for users -- especially those on mobile. All of the demos provided use this approach so you can try it for yourself.
 
-The trick is heavily compressing your images. Because your browser is automatically resampling these images as they're downscaled, compression artifacts disappear in the antialiasing. The images look just as good as uncompressed copies, but you'll shave 50% or more off the file sizes. That's a lot of bandwidth savings.
-
-I recommend exporting your JPGs at 30% quality and WebPs at 60%. All of the demos provided use this approach so you can try it for yourself.
++ I recommend exporting your JPGs at 30% quality and WebPs at 60%, but you'll want to experiment for yourself.
++ 512px, 1024px, 2048px and 3072px are a good baseline for image sizes.
 
 Keep in mind the Mobile WebKit has some [unique issues](http://duncandavidson.com/blog/2012/03/webkit_retina_bug/) with image sizes.
 
+### What about dynamically inserted uxImagse?
+You can pass a DOMElement to the uxImage.Parse() function to only parse images within a container. After writing your markup to the DOM, just fire that off.
+
+### I'd like to see feature X
+My goal is to keep uxImage as lightweight and agile as possible, but I am open to ideas. Open a GitHub issue and we'll talk it out.
