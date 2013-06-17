@@ -77,6 +77,15 @@ Keep in mind the Mobile WebKit has some [unique issues](http://duncandavidson.co
 ### What about dynamically inserted uxImages?
 You can pass a DOM element to the uxImage.Parse() function to only parse for uxImages within that container. After writing your markup to the DOM, just fire that off.
 
+### Using with frameworks like jQuery
+uxImage is designed to be framework agnostic, but will fit in just fine with whatever tools you're most comfortable using. For example:
+
+```js
+$("article .photo-container").each(function() {
+    uxImage.Parse($(this)[0]);
+}));
+```
+
 ###  Asynchronous Module Definition (AMD)
 uxImage uses a shim to support modularization APIs, and should work with any library that supports the format. It's known to work with [RequireJS](http://requirejs.org) and [Almond](https://github.com/jrburke/almond).
 
