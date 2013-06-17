@@ -26,7 +26,7 @@
 function uxImage() {
 
 	this.ready = false;
-	this.speedTestUri = 'http://farm9.staticflickr.com/8519/8629755757_117cdebd73_o.jpg';
+	this.speedTestUri = '//farm9.staticflickr.com/8519/8629755757_117cdebd73_o.jpg';
 	this.deviceRetina = 1;
 	this.deviceBandwidth = null;
 	this.clientWebPSupport = null;
