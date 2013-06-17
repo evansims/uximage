@@ -1,6 +1,6 @@
 **uxImage is yet another JavaScript library for doing wicked awesome responsive image stuff.** It handles fun things like:
 
-* Responsive image scaling based on the dimensions of the parent container.
+* Responsive image scaling based on the dimensions of a parent container.
 * Automatic swapping of larger or smaller images based on predefined breakpoints.
 * Lazily loading images when the user needs to see them, and unloading them when they don't (to conserve memory.)
 * Automatically using alternative WebP copies of images when the browser supports it (to save on bandwidth.)
@@ -42,15 +42,16 @@ The ```ondemand``` class tells the library to treat this as a "lazy loading" ima
 
 **Important** - You'll want to make sure your HTTP server is assigning appropriate caching headers to your assets. Lazy loading can involve a lot of images being loaded in and out of memory, so you want to be sure that visitors are only hitting your servers once for those files. That's on you, cowboy.
 
-## What makes it different?
+## What makes this different?
 
-Most responsive libraries out there would be better described as smart libraries, as they only consider __screen resolution__ during page load for their breakpoints. "Mobile resolution? Use image A. Desktop? Use image B." That's fine, but it isn't really what I consider responsive: just intelligent.
+Most responsive libraries out there would be better described as smart libraries, as they only consider __screen resolution__ for their breakpoints. _"Small screen? Show this. Large? Show that."_ It works, but it isn't really what I consider responsive.
 
-uxImage is truly responsive in that it's breakpoint system is based upon the width of the element's parent container. Just as a responsively designed website lets you effortlessly resize from mobile to large desktop display resolutions and transform the layout to accomodate, uxImage will swap images appropriately as your responsive layout transforms.
+uxImage is truly responsive in that it's breakpoint system is based upon the width of the element's parent container. Just as a responsively designed website effortlessly resizes from mobile to large desktop display resolutions and transform the layout to accomodate, uxImage will swap images appropriately as your responsive layout transforms.
 
 ## Requirements
 
-None. Boosh.
++ There are **no library dependencies**.
++ **A browser with JavaScript support.** If you're concerned about supporting users without support you might considering providing traditional images inside ```<noscript>``` tags. Browsers won't load those images unless they have support disabled.
 
 ## Using It
 
@@ -64,15 +65,29 @@ None. Boosh.
 ## Questions and Best Practices
 
 ### Where's the Retina/HiDPI support?
-@1x is dead. 92.8% of all mobile screens are @1.5x or higher. This library follows a strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/) Simply: You should treat all displays as if they are HiDPI, because most will be. Serve up images at roughly twice the resolution you intend them to be viewed at, but apply high levels of compression to those images. Browsers automatically resample and antialias images as they're downscaled, so compression artifacts disappear in the process. **The images will look just as good as uncompressed copies** but **you'll be shaving 50% or more off your downloaded file sizes**. That's a lot of bandwidth savings, and a huge win for users -- especially those on mobile. All of the demos provided use this approach so you can try it for yourself.
+@1x is dead. 92.8% of all mobile screens are @1.5x or higher. This library follows a strategy put forth by [Thomas Fuch's "Retinafy" book](http://retinafy.me/) Simply: You should treat all displays as if they are HiDPI, because most will be. Serve up images at roughly twice the resolution you intend them to be viewed at, but apply high levels of compression to those images. Browsers automatically resample and anti-alias images as they're scaled and compression artifacts disappear in the process. The **images will look just as good** as uncompressed copies and **you'll shave 50% or more off your downloaded file sizes**. That's a lot of bandwidth savings, and a huge win for users -- especially those on mobile. All of the demos provided use this approach so you can try it for yourself.
 
-+ I recommend exporting your JPGs at 30% quality and WebPs at 60%, but you'll want to experiment for yourself.
-+ 512px, 1024px, 2048px and 3072px are a good baseline for image sizes.
++ I've had good results exporting JPGs at ~30% quality and WebPs at ~60%, but you'll want to experiment for yourself.
++ With Webkit now leading browser usage, it's worth considering offering WebP versions of your images. The bandwidth savings is tremendous.
++ Use Progressive JPEGs. They add a little extra to the file size but will render faster.
++ 512, 1024, 2048 and 3072 are a good device-agnostic baseline for image resolutions[[1]](http://blog.cloudfour.com/how-do-you-pick-responsive-images-breakpoints/comment-page-1/#comment-14803) but you'll want to use what makes sense for your situation.
 
 Keep in mind the Mobile WebKit has some [unique issues](http://duncandavidson.com/blog/2012/03/webkit_retina_bug/) with image sizes.
 
-### What about dynamically inserted uxImagse?
-You can pass a DOMElement to the uxImage.Parse() function to only parse images within a container. After writing your markup to the DOM, just fire that off.
+### What about dynamically inserted uxImages?
+You can pass a DOM element to the uxImage.Parse() function to only parse for uxImages within that container. After writing your markup to the DOM, just fire that off.
+
+###  Asynchronous Module Definition (AMD)
+uxImage uses a shim to support modularization APIs, and should work with any library that supports the format. It's known to work with [RequireJS](http://requirejs.org) and [Almond](https://github.com/jrburke/almond).
+
+You can safely merge it using tools like [r.js](http://requirejs.org/docs/optimization.html) or [Grunt](http://gruntjs.com/).
 
 ### I'd like to see feature X
 My goal is to keep uxImage as lightweight and agile as possible, but I am open to ideas. Open a GitHub issue and we'll talk it out.
+
+### Sites Using uxImage
+
++ [Crowdmap](https://crowdmap.com)
++ [evansims.com](http://evansims.com)
+
+Let me know if you're using it and I'll add you to the list.
