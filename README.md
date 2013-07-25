@@ -69,10 +69,8 @@ uxImage is truly responsive in that it's breakpoint system is based upon the wid
 
 + I've had good results exporting JPGs at ~30% quality and WebPs at ~60%, but you'll want to experiment for yourself.
 + With Webkit now leading browser usage, it's worth considering offering WebP versions of your images. The bandwidth savings is tremendous.
-+ Use Progressive JPEGs. They add a little extra to the file size but will render faster.
++ Use Progressive JPEGs. They add a little extra to the file size but will render faster. They're also exempt Mobile WebKit's [image size restrictions](http://duncandavidson.com/blog/2012/03/webkit_retina_bug/).
 + 512, 1024, 2048 and 3072 are a good device-agnostic baseline for image resolutions[[1]](http://blog.cloudfour.com/how-do-you-pick-responsive-images-breakpoints/comment-page-1/#comment-14803) but you'll want to use what makes sense for your situation.
-
-Keep in mind the Mobile WebKit has some [unique issues](http://duncandavidson.com/blog/2012/03/webkit_retina_bug/) with image sizes.
 
 ### What about dynamically inserted uxImages?
 You can pass a DOM element to the uxImage.Parse() function to only parse for uxImages within that container. After writing your markup to the DOM, just fire that off.
