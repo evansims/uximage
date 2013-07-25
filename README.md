@@ -34,7 +34,7 @@ Better call Kenny Loggins, because we just entered the danger zone. This is an a
 + **data-use-webp** - If this attribute is set, uxImage will replace the file extension of the images (see above) with .webp. If the browser doesn't support WebP, it does nothing.
 + **data-breakpoint** - If the parent container is larger than this value, swap to the medium version of this image. Below it and swap to the small version.
 + **data-breakpoint-high** - Like above, except for swapping between the medium and high resolution version of the image.
-+ **width** / **height** - Optional, but highly recommended. Used in responsive scaling calculations. If not provided, uxImage will first load the smallest version of the image available into memory to determine these values. This means a potentially unnecessary network call and rendering delay you should try to avoid.
++ **width** / **height** - Optional, but highly recommended. Used in responsive scaling calculations. If not provided, uxImage will first load the smallest version of the image available into memory to determine these values. This means a potentially unnecessary network call and rendering delay you should try to avoid. (These can be assigned via CSS rules, alternatively.)
 
 The ```ux-image``` class defines this DIV as a uxImage element. Duh.
 
