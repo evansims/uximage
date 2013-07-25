@@ -44,9 +44,9 @@ The ```ondemand``` class tells the library to treat this as a "lazy loading" ima
 
 ## What makes this different?
 
-Most responsive libraries out there would be better described as smart libraries, as they only consider __screen resolution__ for their breakpoints. _"Small screen? Show this. Large? Show that."_ It works, but it isn't really what I consider responsive.
+Other libraries only consider the device __screen resolution__ for their breakpoints. _"Small screen? Show this. Large? Show that."_ They're just emulating CSS media queries.
 
-uxImage is truly responsive in that it's breakpoint system is based upon the width of the element's parent container. Just as a responsively designed website effortlessly resizes from mobile to large desktop display resolutions and transform the layout to accomodate, uxImage will swap images appropriately as your responsive layout transforms.
+uxImage is truly responsive in that it's breakpoint system is based upon the width of the parent container. As your responsive layout grows and shrinks and changes, for whatever the reason might be, uxImage can dynamically change the images it's displaying to take advantage of the available space, and reduce memory usage intelligently.
 
 ## Requirements
 
