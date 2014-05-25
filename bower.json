@@ -1,0 +1,26 @@
+{
+  "name": "UXImage",
+  "version": "0.2.11",
+  "homepage": "https://github.com/evansims/uximage",
+  "authors": [
+    "Evan Sims <evan@roguehelix.com>"
+  ],
+  "description": "Yet another JavaScript library for doing wicked awesome responsive image stuff.",
+  "main": "dist/uximage.min.js",
+  "moduleType": [
+    "amd",
+    "globals"
+  ],
+  "keywords": [
+    "js",
+    "javascript",
+    "coffeescript",
+    "images",
+    "responsive"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ]
+}
